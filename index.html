@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chicken Burger Games</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif}
+body{display:flex;height:100vh;overflow:hidden;background:#f6fbff;color:#072a46}
+#sidebar{width:300px;background:#fff;border-right:1px solid #e0e0e0;display:flex;flex-direction:column;overflow-y:auto}
+#brand{font-size:22px;font-weight:700;padding:16px;color:#1877f2;text-align:center}
+#sidebar h2{font-size:14px;padding:10px 16px;color:#1877f2;text-transform:uppercase;letter-spacing:.05em;border-top:1px solid #eee}
+#gamesList,.sectionList{padding:12px;display:flex;flex-direction:column;gap:8px}
+.class{display:flex;align-items:center;padding:8px;gap:8px;border-radius:6px;cursor:pointer}
+.class:hover{background:#f0f4ff}
+.class.active{background:#e6f0ff;border-left:4px solid #1877f2}
+.thumb{width:36px;height:36px;background:#1877f2;color:#fff;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:600}
+.meta{flex:1}
+.title{font-weight:600;font-size:14px}
+.sub{font-size:12px;color:#555}
+.play-btn{padding:4px 8px;background:#1877f2;color:#fff;border:none;border-radius:4px;font-size:12px;cursor:pointer}
+#main{flex:1;display:flex;flex-direction:column}
+#playerBar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:#fff;border-bottom:1px solid #e0e0e0}
+#frameWrap{flex:1;position:relative;background:#000}
+#gameFrame{width:100%;height:100%;border:0;display:none}
+#placeholder{position:absolute;inset:0;display:grid;place-items:center;color:#fff;background:rgba(0,0,0,.4)}
+.footer{padding:16px;text-align:center}
+.footer button{margin-top:8px;background:#1877f2;color:#fff;border:none;padding:6px 12px;border-radius:6px;font-weight:600;cursor:pointer}
+</style>
+</head>
+
+<body>
+
+<div id="sidebar">
+  <div id="brand">🍔 CHICKEN BURGER GAMES</div>
+
+  <h2>Games</h2>
+  <div id="gamesList"></div>
+
+  <h2>🎄 Christmas Drop</h2>
+  <div class="sectionList" id="christmasList"></div>
+
+  <div class="footer">
+    🎄 Merry Christmas :)
+    <br>
+    <button onclick="window.open('https://learnepicmaths.vercel.app/','_blank')">OG Site</button>
+  </div>
+</div>
+
+<div id="main">
+  <div id="playerBar">
+    <div>
+      <div id="playerTitle">Select a Game</div>
+      <div id="playerSub"></div>
+    </div>
+  </div>
+
+  <div id="frameWrap">
+    <iframe id="gameFrame"></iframe>
+    <div id="placeholder">Loading...</div>
+  </div>
+</div>
+
+<script>
+const games = [
+  {id:'clash-royale',title:'Clash Royale',subtitle:'Official remake',src:'https://db.quackprep.org/html/clash_royale/index.html'},
+  {id:'hollow-knight',title:'Hollow Knight',subtitle:'A platformer',src:'https://db.quackprep.org/html/hollow_knight/index.html'},
+  {id:'steal-brainrot',title:'Steal a Brainrot',subtitle:'(steal a brainrot)',src:'https://db.quackprep.org/html/steal_a_brainrot/index.html'},
+  {id:'worlds-hardest',title:"The World's Hardest Game",subtitle:'Try not to rage',src:'https://db.quackprep.org/html/theworldshardestgame/index.html'},
+  {id:'twerk-race',title:'Twerk Race 3D',subtitle:'Race-y runner',src:'https://db.quackprep.org/html/twerk_race_3d/index.html'},
+  {id:'street-fighter',title:'Street Fighter',subtitle:'Retro fighting',src:'https://db.quackprep.org/html/street_fighter/index.html'},
+  {id:'temple-run',title:'Temple Run 2',subtitle:'Endless runner',src:'https://db.quackprep.org/html/temple_run_2/index.html'},
+  {id:'rocket-league',title:'Rocket League (Derby)',subtitle:'Car football',src:'https://db.quackprep.org/html/rocket_soccer_derby/index.html'},
+  {id:'doom-1',title:'DOOM 1',subtitle:'Classic shooter',src:'https://db.quackprep.org/html/doom_1/index.html'},
+  {id:'snow-rider',title:'Snow Rider 3D',subtitle:'Winter downhill run',src:'https://db.quackprep.org/html/snow_rider_3d/index.html'}
+];
+
+const christmasGames = [
+  {
+    id:'winter-shooter',
+    title:'Winter Shooter 3D',
+    subtitle:'❄️ Game of the Week',
+    featured:true,
+    src:'https://winter-clash-3d.game-files.crazygames.com/winter-clash-3d/6/index.html?skipPrerollFirstSession=true'
+  }
+];
+
+const frame=document.getElementById('gameFrame');
+const placeholder=document.getElementById('placeholder');
+const playerTitle=document.getElementById('playerTitle');
+const playerSub=document.getElementById('playerSub');
+let activeId=null;
+
+function makeItem(g){
+  const d=document.createElement('div');
+  d.className='class';
+  d.innerHTML=`<div class="thumb">${g.title[0]}</div>
+  <div class="meta"><div class="title">${g.title}</div><div class="sub">${g.subtitle}</div></div>
+  <button class="play-btn">Play</button>`;
+  d.onclick=()=>loadGame(g);
+  return d;
+}
+
+games.forEach(g=>gamesList.appendChild(makeItem(g)));
+christmasGames.forEach(g=>christmasList.appendChild(makeItem(g)));
+
+function loadGame(g){
+  placeholder.style.display='grid';
+  frame.style.display='none';
+  frame.src='';
+  setTimeout(()=>{
+    frame.src=g.src;
+    frame.style.display='block';
+    placeholder.style.display='none';
+    playerTitle.textContent=g.title+(g.featured?' — Game of the Week':'');
+    playerSub.textContent=g.subtitle;
+  },80);
+}
+
+const featured=christmasGames.find(g=>g.featured);
+if(featured) setTimeout(()=>loadGame(featured),300);
+</script>
+
+</body>
+</html>
