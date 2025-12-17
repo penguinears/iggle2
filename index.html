@@ -69,7 +69,7 @@ const games = [
   {id:'steal-brainrot', title:'Steal a Brainrot', subtitle:'(steal a brainrot)', src:'https://db.quackprep.org/html/steal_a_brainrot/index.html'},
   {id:'worlds-hardest', title:"The World's Hardest Game", subtitle:'Try not to rage', src:'https://db.quackprep.org/html/theworldshardestgame/index.html'},
   {id:'twerk-race', title:'Twerk Race 3D', subtitle:'Race-y runner', src:'https://db.quackprep.org/html/twerk_race_3d/index.html'},
-  {id:'street-fighter', title:'Street Fighter', subtitle:'Retro fighting — Game of the Week', src:'https://db.quackprep.org/html/street_fighter/index.html', featured:true},
+  {id:'street-fighter', title:'Street Fighter', subtitle:'Retro fighting', src:'https://db.quackprep.org/html/street_fighter/index.html'},
   {id:'temple-run', title:'Temple Run 2', subtitle:'Endless runner', src:'https://db.quackprep.org/html/temple_run_2/index.html'},
   {id:'rocket-league', title:'Rocket League (Derby)', subtitle:'Car football', src:'https://db.quackprep.org/html/rocket_soccer_derby/index.html'},
   {id:'doom-1', title:'DOOM 1 (remake)', subtitle:'Classic shooter', src:'https://db.quackprep.org/html/doom_1/index.html'},
@@ -81,10 +81,10 @@ const games = [
   {id:'fnaf', title:'Five Nights at Freddy’s', subtitle:'Survive the night', src:'https://db.quackprep.org/html/fnaf/index.html'},
 
   {
-    id:'iron-friend',
-    title:'Iron Friend',
-    subtitle:'First-person horror survival',
-    src:'https://games.crazygames.com/en_US/iron-friend/index.html?v=1.347'
+    id:'gta-simulator',
+    title:'GTA Simulator',
+    subtitle:'Open-world crime sandbox',
+    src:'https://r2.fizzerz.com/game-source/gta-simulator/index.html'
   }
 ];
 
@@ -98,6 +98,13 @@ const christmasGames = [
 ];
 
 const weeklyGames = [
+  {
+    id:'fallout',
+    title:'Fallout',
+    subtitle:'Post-apocalyptic adventure — Game of the Week',
+    src:'https://glacierarcade.win/storage/fallout.html',
+    featured:true
+  },
   {
     id:'bullet-army-run',
     title:'Bullet Army Run',
@@ -131,8 +138,8 @@ function makeGameItem(game) {
     </div>
     <div><button class="play-btn">Play</button></div>
   `;
-  el.querySelector('.play-btn').addEventListener('click', e => { e.stopPropagation(); loadGame(game); });
-  el.addEventListener('click', () => loadGame(game));
+  el.querySelector('.play-btn').onclick = e => { e.stopPropagation(); loadGame(game); };
+  el.onclick = () => loadGame(game);
   return el;
 }
 
@@ -177,8 +184,8 @@ reloadBtn.onclick = () => {
   setTimeout(() => frame.src = game.src, 60);
 };
 
-const featured = games.find(g => g.featured);
-if(featured) setTimeout(() => loadGame(featured), 200);
+const featured = weeklyGames.find(g => g.featured);
+if(featured) setTimeout(() => loadGame(featured), 250);
 </script>
 
 </body>
