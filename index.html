@@ -6,26 +6,29 @@
 <title>Iggle — Play Epic Games</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,sans-serif}
-body{display:flex;height:100vh;overflow:hidden;background:#f6fbff;color:#072a46}
-#sidebar{width:300px;background:#fff;border-right:1px solid #e0e0e0;display:flex;flex-direction:column;overflow-y:auto}
-#sidebar h2{font-size:14px;padding:10px 16px;color:#1877f2;text-transform:uppercase;letter-spacing:.05em;margin-top:8px;border-top:1px solid #eee}
-#gamesList,.sectionList{padding:12px;display:flex;flex-direction:column;gap:8px}
-.class{display:flex;align-items:center;padding:8px;gap:8px;border-radius:6px;cursor:pointer}
-.class:hover{background:#f0f4ff}
-.class.active{background:#e6f0ff;border-left:4px solid #1877f2}
-.thumb{width:36px;height:36px;background:#1877f2;color:#fff;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:600}
-.meta{flex:1}
-.title{font-weight:600;font-size:14px}
-.sub{font-size:12px;color:#555}
-.play-btn{padding:4px 8px;background:#1877f2;color:#fff;border:none;border-radius:4px;font-size:12px;cursor:pointer}
-#main{flex:1;display:flex;flex-direction:column}
-#playerBar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:#fff;border-bottom:1px solid #e0e0e0}
-#controls{display:flex;gap:8px}
-#controls button{padding:6px 12px;background:#1877f2;color:#fff;border:none;border-radius:4px;font-size:12px;cursor:pointer}
-#frameWrap{flex:1;position:relative;background:#000;display:flex;align-items:center;justify-content:center}
-#gameFrame{width:100%;height:100%;border:none;display:none}
-#placeholder{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.5);color:#fff;font-size:18px}
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+  body { display: flex; height: 100vh; overflow: hidden; background: #f6fbff; color: #072a46; }
+  #sidebar { width: 300px; background: #fff; border-right: 1px solid #e0e0e0; display: flex; flex-direction: column; overflow-y: auto; }
+  #sidebar h2 { font-size: 14px; padding: 10px 16px; color: #1877f2; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 8px; border-top: 1px solid #eee; }
+  #gamesList, .sectionList { flex: 1; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .class { display: flex; align-items: center; padding: 8px; gap: 8px; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
+  .class:hover { background: #f0f4ff; }
+  .class.active { background: #e6f0ff; border-left: 4px solid #1877f2; }
+  .thumb { width: 36px; height: 36px; background: #1877f2; color: #fff; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+  .meta { flex: 1; display: flex; flex-direction: column; }
+  .title { font-weight: 600; font-size: 14px; }
+  .sub { font-size: 12px; color: #555; }
+  .play-btn { padding: 4px 8px; background: #1877f2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; }
+  #main { flex: 1; display: flex; flex-direction: column; }
+  #playerBar { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; background: #fff; border-bottom: 1px solid #e0e0e0; }
+  #playerInfo { display: flex; flex-direction: column; }
+  #playerTitle { font-weight: 600; font-size: 16px; }
+  #playerSub { font-size: 13px; color: #555; }
+  #controls { display: flex; gap: 8px; }
+  #controls button { padding: 6px 12px; background: #1877f2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; }
+  #frameWrap { flex: 1; position: relative; background: #000; display: flex; align-items: center; justify-content: center; }
+  #gameFrame { width: 100%; height: 100%; border: none; display: none; }
+  #placeholder { position: absolute; display: grid; place-items: center; color: #fff; font-size: 18px; background: rgba(0,0,0,0.5); width: 100%; height: 100%; }
 </style>
 </head>
 <body>
@@ -34,13 +37,16 @@ body{display:flex;height:100vh;overflow:hidden;background:#f6fbff;color:#072a46}
   <h2>Games</h2>
   <div id="gamesList"></div>
 
-  <h2>Christmas Drop</h2>
+  <h2>🎄 Christmas Drop</h2>
   <div class="sectionList" id="christmasList"></div>
+
+  <h2>Weekly Game Drop</h2>
+  <div class="sectionList" id="weeklyList"></div>
 </div>
 
 <div id="main">
   <div id="playerBar">
-    <div>
+    <div id="playerInfo">
       <div id="playerTitle">Select a Game</div>
       <div id="playerSub"></div>
     </div>
@@ -58,83 +64,121 @@ body{display:flex;height:100vh;overflow:hidden;background:#f6fbff;color:#072a46}
 
 <script>
 const games = [
-  {id:'clash-royale',title:'Clash Royale',subtitle:'Official remake',src:'https://db.quackprep.org/html/clash_royale/index.html'},
-  {id:'hollow-knight',title:'Hollow Knight',subtitle:'A platformer',src:'https://db.quackprep.org/html/hollow_knight/index.html'},
-  {id:'steal-brainrot',title:'Steal a Brainrot',subtitle:'Arcade chaos',src:'https://db.quackprep.org/html/steal_a_brainrot/index.html'},
-  {id:'worlds-hardest',title:'The World’s Hardest Game',subtitle:'Try not to rage',src:'https://db.quackprep.org/html/theworldshardestgame/index.html'},
-  {id:'twerk-race',title:'Twerk Race 3D',subtitle:'Runner',src:'https://db.quackprep.org/html/twerk_race_3d/index.html'},
-  {id:'street-fighter',title:'Street Fighter',subtitle:'Retro fighting',src:'https://db.quackprep.org/html/street_fighter/index.html'},
-  {id:'temple-run',title:'Temple Run 2',subtitle:'Endless runner',src:'https://db.quackprep.org/html/temple_run_2/index.html'},
-  {id:'rocket-league',title:'Rocket League Derby',subtitle:'Car football',src:'https://db.quackprep.org/html/rocket_soccer_derby/index.html'},
-  {id:'doom-1',title:'DOOM 1',subtitle:'Classic shooter',src:'https://db.quackprep.org/html/doom_1/index.html'},
-  {id:'eagler-craft',title:'Eagler Craft',subtitle:'Sandbox',src:'https://db.quackprep.org/html/minecraft/index.html'},
-  {id:'bloons-td',title:'Bloons TD',subtitle:'Tower defense',src:'https://db.quackprep.org/html/bloons_td/index.html'},
-  {id:'snow-rider',title:'Snow Rider 3D',subtitle:'Winter downhill run',src:'https://db.quackprep.org/html/snow_rider_3d/index.html'},
-  {id:'forest-99',title:'99 Nights in the Forest',subtitle:'Survival horror',src:'https://db.quackprep.org/html/99_nights_in_the_forest/index.html'},
-  {id:'fnaf',title:'Five Nights at Freddy’s',subtitle:'Horror classic',src:'https://db.quackprep.org/html/fnaf/index.html'},
+  {id:'clash-royale', title:'Clash Royale', subtitle:'Official remake', src:'https://db.quackprep.org/html/clash_royale/index.html'},
+  {id:'hollow-knight', title:'Hollow Knight', subtitle:'A platformer', src:'https://db.quackprep.org/html/hollow_knight/index.html'},
+  {id:'steal-brainrot', title:'Steal a Brainrot', subtitle:'(steal a brainrot)', src:'https://db.quackprep.org/html/steal_a_brainrot/index.html'},
+  {id:'worlds-hardest', title:"The World's Hardest Game", subtitle:'Try not to rage', src:'https://db.quackprep.org/html/theworldshardestgame/index.html'},
+  {id:'twerk-race', title:'Twerk Race 3D', subtitle:'Race-y runner', src:'https://db.quackprep.org/html/twerk_race_3d/index.html'},
+  {id:'street-fighter', title:'Street Fighter', subtitle:'Retro fighting — Game of the Week', src:'https://db.quackprep.org/html/street_fighter/index.html', featured:true},
+  {id:'temple-run', title:'Temple Run 2', subtitle:'Endless runner', src:'https://db.quackprep.org/html/temple_run_2/index.html'},
+  {id:'rocket-league', title:'Rocket League (Derby)', subtitle:'Car football', src:'https://db.quackprep.org/html/rocket_soccer_derby/index.html'},
+  {id:'doom-1', title:'DOOM 1 (remake)', subtitle:'Classic shooter', src:'https://db.quackprep.org/html/doom_1/index.html'},
+  {id:'eagler-craft', title:'Eagler Craft', subtitle:'Minecraft-style sandbox', src:'https://db.quackprep.org/html/minecraft/index.html'},
+  {id:'bloons-td', title:'Bloons TD', subtitle:'Pop the waves', src:'https://db.quackprep.org/html/bloons_td/index.html'},
+  {id:'snow-rider', title:'Snow Rider 3D', subtitle:'Winter downhill run', src:'https://db.quackprep.org/html/snow_rider_3d/index.html'},
+
+  {id:'forest-99', title:'Budget 99 Nights in the Forest', subtitle:'Explore the wild', src:'https://db.quackprep.org/html/99_nights_in_the_forest/index.html'},
+  {id:'fnaf', title:'Five Nights at Freddy’s', subtitle:'Survive the night', src:'https://db.quackprep.org/html/fnaf/index.html'},
+
   {
-    id:'streetview',
-    title:'Street View Explorer',
-    subtitle:'Free roam',
-    src:'https://www.google.com/maps/embed/v1/streetview?location=27.1719752,78.0422793&key=AIzaSyA2fHNuyc768n9ZJLTrfbkWLNK3sLOK-iQ&fov=100&language=iw'
+    id:'iron-friend',
+    title:'Iron Friend',
+    subtitle:'First-person horror survival',
+    src:'https://games.crazygames.com/en_US/iron-friend/index.html?v=1.347'
   }
 ];
 
 const christmasGames = [
   {
-    id:'winter-clash',
-    title:'Winter Clash 3D',
-    subtitle:'Snowball shooter — Game of the Week',
-    src:'/embed/winter/index.html?fb_locale=en',
-    featured:true
-  },
-  {
-    id:'snow-rider-xmas',
-    title:'Snow Rider 3D',
-    subtitle:'Holiday edition',
-    src:'https://db.quackprep.org/html/snow_rider_3d/index.html'
+    id:'christmas-drop',
+    title:'Christmas Drop',
+    subtitle:'Seasonal winter game',
+    src:'https://app-98524.games.s3.yandex.net/98524/e90pl68o7uv7ra70v9wnuobstic38e2g_brotli/index.html'
   }
 ];
 
-const frame=document.getElementById('gameFrame');
-const placeholder=document.getElementById('placeholder');
-const playerTitle=document.getElementById('playerTitle');
-const playerSub=document.getElementById('playerSub');
-let activeId=null;
+const weeklyGames = [
+  {
+    id:'bullet-army-run',
+    title:'Bullet Army Run',
+    subtitle:'Fast-paced shooter runner',
+    src:'https://games.builds.gamepix.com/78U4MT/2wKz6qwHSKfXzm4QgwaH0AVLwuY/index.html?sid=e4515&lang=en&namespace=bullet-army-run'
+  }
+];
 
-function item(game){
-  const d=document.createElement('div');
-  d.className='class';
-  d.dataset.id=game.id;
-  d.innerHTML=`<div class="thumb">${game.title[0]}</div>
-  <div class="meta"><div class="title">${game.title}</div><div class="sub">${game.subtitle}</div></div>
-  <button class="play-btn">Play</button>`;
-  d.onclick=()=>load(game);
-  d.querySelector('button').onclick=e=>{e.stopPropagation();load(game)};
-  return d;
+const gamesList = document.getElementById('gamesList');
+const christmasList = document.getElementById('christmasList');
+const weeklyList = document.getElementById('weeklyList');
+const frame = document.getElementById('gameFrame');
+const placeholder = document.getElementById('placeholder');
+const playerTitle = document.getElementById('playerTitle');
+const playerSub = document.getElementById('playerSub');
+const fullBtn = document.getElementById('fullBtn');
+const openNewBtn = document.getElementById('openNewBtn');
+const reloadBtn = document.getElementById('reloadBtn');
+const frameWrap = document.getElementById('frameWrap');
+let activeId = null;
+
+function makeGameItem(game) {
+  const el = document.createElement('div');
+  el.className = 'class';
+  el.dataset.id = game.id;
+  el.innerHTML = `
+    <div class="thumb">${game.title.split(' ').map(s=>s[0]).slice(0,2).join('')}</div>
+    <div class="meta">
+      <div class="title">${game.title}</div>
+      <div class="sub">${game.subtitle}</div>
+    </div>
+    <div><button class="play-btn">Play</button></div>
+  `;
+  el.querySelector('.play-btn').addEventListener('click', e => { e.stopPropagation(); loadGame(game); });
+  el.addEventListener('click', () => loadGame(game));
+  return el;
 }
 
-games.forEach(g=>gamesList.appendChild(item(g)));
-christmasGames.forEach(g=>christmasList.appendChild(item(g)));
+games.forEach(g => gamesList.appendChild(makeGameItem(g)));
+christmasGames.forEach(g => christmasList.appendChild(makeGameItem(g)));
+weeklyGames.forEach(g => weeklyList.appendChild(makeGameItem(g)));
 
-async function load(game){
-  if(activeId===game.id)return;
-  document.querySelectorAll('.class').forEach(e=>e.classList.remove('active'));
-  placeholder.style.display='grid';
-  frame.style.display='none';
-  frame.src='';
-  await new Promise(r=>setTimeout(r,80));
-  frame.src=game.src;
-  frame.style.display='block';
-  placeholder.style.display='none';
-  activeId=game.id;
-  playerTitle.textContent=game.title+(game.featured?' — Game of the Week':'');
-  playerSub.textContent=game.subtitle;
-  document.querySelector(`[data-id="${game.id}"]`).classList.add('active');
+async function loadGame(game) {
+  if(activeId === game.id) return;
+  document.querySelectorAll('.class.active').forEach(el => el.classList.remove('active'));
+  placeholder.style.display = 'grid';
+  frame.style.display = 'none';
+  frame.src = '';
+  await new Promise(r => setTimeout(r, 80));
+  frame.src = game.src;
+  frame.style.display = 'block';
+  placeholder.style.display = 'none';
+  activeId = game.id;
+  playerTitle.textContent = game.title;
+  playerSub.textContent = game.subtitle;
+  const el = document.querySelector(`[data-id="${game.id}"]`);
+  if(el) el.classList.add('active');
 }
 
-const featured=christmasGames.find(g=>g.featured);
-if(featured)setTimeout(()=>load(featured),300);
+fullBtn.onclick = async () => {
+  if(document.fullscreenElement) await document.exitFullscreen();
+  else await frameWrap.requestFullscreen();
+};
+
+openNewBtn.onclick = () => {
+  if(!activeId) return alert('Select a game first');
+  const all = [...games, ...christmasGames, ...weeklyGames];
+  const game = all.find(g => g.id === activeId);
+  window.open(game.src, '_blank');
+};
+
+reloadBtn.onclick = () => {
+  if(!activeId) return;
+  const all = [...games, ...christmasGames, ...weeklyGames];
+  const game = all.find(g => g.id === activeId);
+  frame.src = '';
+  setTimeout(() => frame.src = game.src, 60);
+};
+
+const featured = games.find(g => g.featured);
+if(featured) setTimeout(() => loadGame(featured), 200);
 </script>
 
 </body>
